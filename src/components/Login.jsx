@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login } = useAuth();
+  const { login, googleSignin, currentUser } = useAuth();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
@@ -18,6 +18,20 @@ const Login = () => {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
+      navigate("/");
+    } catch {
+      setError("Failed to sign in");
+    }
+    setLoading(false);
+  }
+
+  async function handleGoogleLogin(e) {
+    e.preventDefault();
+
+    try {
+      setError("");
+      setLoading(true);
+      await googleSignin();
       navigate("/");
     } catch {
       setError("Failed to sign in");
@@ -45,8 +59,21 @@ const Login = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button disabled={loading} className="w-100 mt-4" type="submit">
+            <Button
+              name="loginWithEmail"
+              disabled={loading}
+              className="w-45 me-2 mt-4"
+              type="submit"
+            >
               Log In
+            </Button>
+            <Button
+              name="loginWithGoogle"
+              onClick={handleGoogleLogin}
+              disabled={loading}
+              className="w-45 mt-4"
+            >
+              Google Log In
             </Button>
           </Form>
           <div className="w-100 text-center mt-3">
