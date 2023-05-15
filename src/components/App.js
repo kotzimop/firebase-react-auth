@@ -7,6 +7,7 @@ import { Container } from "react-bootstrap";
 import { AuthProvider } from "../contexts/AuthContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
+import UpdateProfile from "./UpdateProfile";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
               {/* Private route - protected */}
               <Route exact path="/" element={<PrivateRoute />}>
                 <Route exact path="/" element={<Dashboard />} />
+              </Route>
+              <Route path="/update-profile" element={<PrivateRoute />}>
+                <Route path="/update-profile" element={<UpdateProfile />} />
               </Route>
               {/* End of private route */}
               <Route path="/signup" element={<Signup />} />
